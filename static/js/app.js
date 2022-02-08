@@ -86,9 +86,9 @@ dataSamples.then(function (data) {
     }
 
     var firstItem = list_of_names[0];
-    buildBarChart(firstItem, data);
+    build_Bar_Chart(firstItem, data);
 
-    function buildBarChart(itemid, data) {
+    function build_Bar_Chart(itemid, data) {
         var data_samples = data.samples;
 
         var sample_Filter = data_samples.filter(sampleObject => sampleObject.id == itemid);
@@ -105,10 +105,72 @@ dataSamples.then(function (data) {
     
             }
         ];
-        Plotly.newPlot("bar", dataBar);
+
+        var layOut = {
+            title: "Top 10 OTUs Found",
+            yaxis:{
+                // https://plotly.com/python/tick-formatting/
+                // linear is for the y axis to become "numbers"
+                tickmode:"linear",
+            },
+            margin: {
+                // l for to the right of screen...the higher number is, the more right the graph will shift
+                l: 100,
+                // r for to the left of screen...the higher number is, the more left of graph will be
+                r: 100,
+                // t for away from title/towards bottom of screen...the higher number is, the more smaller and further away it is from title
+                t: 100,
+                // b for to the top of screen...the higher number is, the more it shifts its graph to the top of the page
+                b:20
+            }
+        };
+        Plotly.newPlot("bar", dataBar, layOut);
     }
 
+    var firstItem = list_of_names[0];
+    build_Bubble_Chart(firstItem, data);
 
+    function build_Bubble_Chart(itemid, data) {
+        var data_samples = data.samples;
+    
+        var result = data_samples[0];
+    
+        var dataBubble = [
+            {
+            x: result.otu_ids,
+            y: result.sample_values,
+            mode: 'markers',
+            marker: {
+                size: result.sample_values,
+                color: result.otu_ids
+            },
+            orientation: "h",
+            text: result.otu_labels
+    
+            }
+        ];
+
+        var layOut_2 = {
+            xaxis: {title:"Otu ID"},
+            height: 500,
+            width: 900
+        };
+        Plotly.newPlot("bubble", dataBubble, layOut_2);
+    }
+
+    // function getDemoInfo(id) {
+    //     var data_meta = data.metadata;
+
+    //     var result = data_meta.filter(meta => meta.id.toString() === id)[0];
+
+    //     var demo_graphic_Info = d3.select("#sample-metadata");
+
+    //     demo_graphic_Info.html("");
+
+    //     Object.entries(result).forEach((key) => {
+    //         demo_graphic_Info.append("h5").text(key[0].toUpperCase() + ": " + key[1] + "\n")
+    //     });
+    // };
 
 
 
