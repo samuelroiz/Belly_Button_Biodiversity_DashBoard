@@ -4,6 +4,7 @@ d3.json("samples.json").then(function(data) {
 });
 
 const url = "samples.json";
+var data_test;
 
 // Promise Pending
 const dataSamples = d3.json(url);
@@ -12,9 +13,11 @@ dataSamples.then(function (data) {
     const names_list = data.names;
     const samples_list = data.samples;
     const otu_list_test = samples_list[0].otu_ids;
+    const metadata = data.metadata;
 
     console.log("Names:",names_list);
     console.log("Samples:", samples_list);
+    console.log("Metadata: ", metadata);
     // console.log("test", otu_list_test);
 
     test_list = [];
@@ -42,12 +45,14 @@ dataSamples.then(function (data) {
     empty_list.forEach(function (x) { counts[x] = (counts[x] || 0) + 1; });
     console.log('Counts per Otu ID:',counts)
 
+    var data_test = data;
+
     // https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent
-    var dropdown_button = document.getElementById("insert_otu_id");
+    var dropdown_button = document.getElementById("selDataset");
     var list_of_names = data.names;
-    var selectList = document.createElement("select")
-    selectList.setAttribute("id", "test");
-    dropdown_button.appendChild(selectList);
+    // var selectList = document.createElement("select")
+    // selectList.setAttribute("id", "test");
+    // dropdown_button.appendChild(selectList);
 
     for (var i = 0; i < list_of_names.length; i++) {
         var name_outcome = list_of_names[i];
@@ -85,10 +90,15 @@ dataSamples.then(function (data) {
 
     }
 
-    var firstItem = list_of_names[0];
+    const firstItem = list_of_names[0];
     build_Bar_Chart(firstItem, data);
 
+    console.log("Data_test check for samples: ", data_test.samples);
+
     function build_Bar_Chart(itemid, data) {
+        if (data === undefined)
+            data = data_test;
+
         var data_samples = data.samples;
 
         var sample_Filter = data_samples.filter(sampleObject => sampleObject.id == itemid);
@@ -127,13 +137,17 @@ dataSamples.then(function (data) {
         Plotly.newPlot("bar", dataBar, layOut);
     }
 
-    var firstItem = list_of_names[0];
+    // var firstItem = list_of_names[0];
     build_Bubble_Chart(firstItem, data);
+    console.log("Bubble Chart data_test samples check: ", data_test.samples)
 
     function build_Bubble_Chart(itemid, data) {
+        if (data === undefined)
+            data = data_test;
         var data_samples = data.samples;
+        var sample_Filter = data_samples.filter(sampleObject => sampleObject.id == itemid);
     
-        var result = data_samples[0];
+        var result = sample_Filter[0];
     
         var dataBubble = [
             {
@@ -152,28 +166,44 @@ dataSamples.then(function (data) {
 
         var layOut_2 = {
             xaxis: {title:"Otu ID"},
-            height: 500,
+            height: 500, 
             width: 900
         };
         Plotly.newPlot("bubble", dataBubble, layOut_2);
     }
 
-    // function getDemoInfo(id) {
-    //     var data_meta = data.metadata;
+    build_Meta_Data(firstItem);
+    console.log("Build Metadata data check: ", data_test.metadata)
 
-    //     var result = data_meta.filter(meta => meta.id.toString() === id)[0];
+    function build_Meta_Data(itemid, data) {
+        if (data === undefined)
+            data = data_test;
 
-    //     var demo_graphic_Info = d3.select("#sample-metadata");
+        console.log("Samples test:", data.metadata);
 
-    //     demo_graphic_Info.html("");
+        var data_metadata = data.metadata;
+        var sample_Filter = data_metadata.filter(sampleObject => sampleObject.id == itemid);
+    
+        var result = sample_Filter[0];
 
-    //     Object.entries(result).forEach((key) => {
-    //         demo_graphic_Info.append("h5").text(key[0].toUpperCase() + ": " + key[1] + "\n")
-    //     });
-    // };
+        var sample_metadata_panel = d3.select("#sample-metadata");
+        sample_metadata_panel.html("")
+        sample_metadata_panel.append("h6").text("id: " + itemid);
+        sample_metadata_panel.append("h6").text("ethnicity: " + result.ethnicity);
+        sample_metadata_panel.append("h6").text("gender: " + result.gender);
+        sample_metadata_panel.append("h6").text("age: " + result.age);
+        sample_metadata_panel.append("h6").text("location: " + result.location);
+        sample_metadata_panel.append("h6").text("bbtype: " + result.bbtype);
+        sample_metadata_panel.append("h6").text("wfreq: " + result.wfreq);
+    };
 
 
 
 
+});
 
-})
+function optionChanged(item) {
+    build_Bar_Chart(item);
+    build_Bubble_Chart(item);
+    build_Meta_Data(item);
+}
