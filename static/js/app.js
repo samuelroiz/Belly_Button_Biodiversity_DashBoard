@@ -272,7 +272,7 @@ dataSamples.then(function (data) {
         ];
 
         var layOut_2 = {
-            xaxis: {title:"Otu ID"},
+            xaxis: {title:"Otu ID: " + test_subject_id},
             height: 500, 
             width: 900
         };
