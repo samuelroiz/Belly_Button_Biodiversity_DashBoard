@@ -13,8 +13,8 @@ The project is to construct an interactive dashboard to explore the Belly Button
 
 ![Barchart and Demographic Example](https://github.com/samuelroiz/Belly_Button_Biodiversity_DashBoard/blob/main/images/demographic_and_barchart_ID_940.png)
 
-The website has a section of the demographic table info of the selected test subject ID number. The table displays the test subject id, ethnicity, gender, age, location, bbtype, and wfreq. The table should not show undefined since the code elimnates data that are undefined. 
+The website has a section of the demographic table info of the selected test subject ID number. The table displays the test subject id, ethnicity, gender, age, location, bbtype, and wfreq. The table should not show undefined since the code eliminates data that are undefined. 
 
 ![Barchart and Demographic Example](https://github.com/samuelroiz/Belly_Button_Biodiversity_DashBoard/blob/main/images/demographic_and_barchart_ID_940.png)
 
-To change the test subject ID number, click on the dropdown button in the top left corner of the table. Once clicked on, the dropdown button shows a list test subject ids. To select a test subject id is by selecting one of the ids. It will change the demographic info table, bar chart, and the bubble chart. 
+To change the test subject ID number, click on the dropdown button in the top left corner of the table. Once clicked on, the dropdown button shows a list of test subject ids. To select a test subject id is by selecting one of the ids. It will change the demographic info table, bar chart, and bubble chart. 
