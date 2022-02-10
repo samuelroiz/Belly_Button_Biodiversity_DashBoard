@@ -7,7 +7,7 @@ The project is to construct an interactive dashboard to explore the Belly Button
 #### Website Outcome:
 
 ![Barchart and Demographic Example](https://github.com/samuelroiz/Belly_Button_Biodiversity_DashBoard/blob/main/images/demographic_and_barchart_ID_940.png)
-![Bubblechart Example](https://github.com/samuelroiz/Belly_Button_Biodiversity_DashBoard/blob/main/images/demographic_and_barchart_ID_940.png)
+![Bubblechart Example](https://github.com/samuelroiz/Belly_Button_Biodiversity_DashBoard/blob/main/images/bubble_chart_ID_940.png)
 
 ##### Demographic Table Info
 
