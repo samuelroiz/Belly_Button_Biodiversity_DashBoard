@@ -1,5 +1,6 @@
+
 d3.json("samples.json").then(function(data) {
-       console.log("Sample Data:",data);
+       console.log("Check D3 JSON Sample Data:",data);
 
 });
 
@@ -13,11 +14,11 @@ dataSamples.then(function (data) {
     const names_list = data.names;
     const samples_list = data.samples;
     const otu_list_test = samples_list[0].otu_ids;
-    const metadata = data.metadata;
+    const metadata_list = data.metadata;
 
     console.log("Names:",names_list);
     console.log("Samples:", samples_list);
-    console.log("Metadata: ", metadata);
+    console.log("Metadata: ", metadata_list);
     // console.log("test", otu_list_test);
 
     test_list = [];
@@ -202,8 +203,117 @@ dataSamples.then(function (data) {
 
 });
 
-function optionChanged(item) {
-    build_Bar_Chart(item);
-    build_Bubble_Chart(item);
-    build_Meta_Data(item);
-}
+    function build_Bar_Chart(test_subject_id, all_data) {
+        if (all_data === undefined)
+            all_data = data_test;
+            console.log("bar chart all_data: ", all_data)
+
+        var data_samples = all_data.samples;
+
+        var sample_Filter = data_samples.filter(sampleObject => sampleObject.id == test_subject_id);
+    
+        var result = sample_Filter[0];
+    
+        var dataBar = [
+            {
+            x: result.sample_values.slice(0, 10).reverse(),
+            y: result.otu_ids.slice(0, 10).map(val=>"OTU " + val).reverse(),
+            type: 'bar',
+            orientation: "h",
+            text: result.otu_labels.slice(0, 10).reverse()
+    
+            }
+        ];
+
+        var layOut = {
+            title: "Top 10 OTUs Found",
+            yaxis:{
+                // https://plotly.com/python/tick-formatting/
+                // linear is for the y axis to become "numbers"
+                tickmode:"linear",
+            },
+            margin: {
+                // l for to the right of screen...the higher number is, the more right the graph will shift
+                l: 100,
+                // r for to the left of screen...the higher number is, the more left of graph will be
+                r: 100,
+                // t for away from title/towards bottom of screen...the higher number is, the more smaller and further away it is from title
+                t: 100,
+                // b for to the top of screen...the higher number is, the more it shifts its graph to the top of the page
+                b:20
+            }
+        };
+        Plotly.newPlot("bar", dataBar, layOut);
+    };
+
+    function build_Bubble_Chart(test_subject_id, all_data) {
+        if (all_data === undefined)
+            all_data = data_test;
+            console.log("bubble chart all_data: ", all_data)
+
+        var data_samples = all_data.samples;
+        var sample_Filter = data_samples.filter(sampleObject => sampleObject.id == test_subject_id);
+    
+        var result = sample_Filter[0];
+    
+        var dataBubble = [
+            {
+            x: result.otu_ids,
+            y: result.sample_values,
+            mode: 'markers',
+            marker: {
+                size: result.sample_values,
+                color: result.otu_ids
+            },
+            orientation: "h",
+            text: result.otu_labels
+    
+            }
+        ];
+
+        var layOut_2 = {
+            xaxis: {title:"Otu ID"},
+            height: 500, 
+            width: 900
+        };
+        Plotly.newPlot("bubble", dataBubble, layOut_2);
+    };
+
+
+    function build_Meta_Data(test_subject_id, all_data) {
+        if (all_data === undefined)
+            all_data = data_test;
+            console.log("metadata all_data test:", all_data.metadata);
+
+        var data_metadata = all_data.metadata;
+        var sample_Filter = data_metadata.filter(sampleObject => sampleObject.id == test_subject_id);
+    
+        var result = sample_Filter[0];
+
+        var sample_metadata_panel = d3.select("#sample-metadata");
+        sample_metadata_panel.html("")
+        sample_metadata_panel.append("h6").text("id: " + test_subject_id);
+        sample_metadata_panel.append("h6").text("ethnicity: " + result.ethnicity);
+        sample_metadata_panel.append("h6").text("gender: " + result.gender);
+        sample_metadata_panel.append("h6").text("age: " + result.age);
+        sample_metadata_panel.append("h6").text("location: " + result.location);
+        sample_metadata_panel.append("h6").text("bbtype: " + result.bbtype);
+        sample_metadata_panel.append("h6").text("wfreq: " + result.wfreq);
+    };
+
+// 'item' is needed because this will be the number of the test subject
+function optionChanged(item) { 
+
+
+
+    dataSamples.then(function (data_samples){
+
+    
+    build_Bar_Chart(item, data_samples);
+
+    build_Bubble_Chart(item, data_samples);
+
+    build_Meta_Data(item, data_samples);
+
+    });
+};
